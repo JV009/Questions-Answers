@@ -322,7 +322,6 @@ DEPENDENCIES
   slim-rails
   sprockets-rails
   stimulus-rails
-  stringio (>= 3.1.5)
   turbo-rails
   tzinfo-data
   web-console
