@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  resources :questions do
-    resources :answers
+  resources :questions, shallow: true do
+    resources :answers, shallow: true
   end
 end
