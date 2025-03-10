@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-
   let(:question) { create(:question) }
   let(:answer) { create(:answer, question: question) }
+  let(:user) { create(:user) }
 
   describe 'GET #show' do
     before do
@@ -20,6 +20,8 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'GET #new' do
+    before { login(user) }
+
     before do
       get :new, params: { question_id: question }
     end
@@ -34,6 +36,8 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'GET #edit' do
+    before { login(user) }
+
     before do
       get :edit, params: { question_id: question, id: answer }
     end
@@ -48,6 +52,8 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'POST #create' do
+    before { login(user) }
+
     context 'with valid attributes' do
       it 'saves a new answer in the database' do
         expect { post :create, params: { answer: attributes_for(:answer), question_id: question } }.to change(Answer, :count).by(1)
@@ -56,7 +62,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'redirects to show view' do
         post :create, params: { answer: attributes_for(:answer), question_id: question }
 
-        expect(response).to redirect_to(question_answer_path(question, assigns(:answer)))
+        expect(response).to redirect_to(answer_path(assigns(:answer)))
       end
     end
 
@@ -74,6 +80,8 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'PATCH #update' do
+    before { login(user) }
+
     context 'with valid attributes' do
       it 'assigns the requested answer to @answer' do
         patch :update, params: { question_id: question, id: answer, answer: attributes_for(:answer) }
@@ -92,7 +100,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'redirects to updated answer' do
         patch :update, params: { question_id: question, id: answer, answer: attributes_for(:answer) }
 
-        expect(response).to redirect_to question_answer_path(question, answer)
+        expect(response).to redirect_to answer_path(answer)
       end
     end
 
@@ -114,6 +122,8 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
+    before { login(user) }
+
     let!(:question) { create(:question) }
     let!(:answer) { create(:answer, question: question) }
 
@@ -122,9 +132,9 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     it 'redirects to index' do
-      delete :destroy, params: { question_id: question, id: answer }
+      delete :destroy, params: { question_id: question.id, id: answer.id }
 
-      expect(response).to redirect_to question_answers_path
+      expect(response).to redirect_to question_path(question)
     end
   end
 end
