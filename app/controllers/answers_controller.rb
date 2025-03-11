@@ -1,23 +1,15 @@
 class AnswersController < ApplicationController
-  before_action :find_answer, only: %i[show edit update destroy]
+  before_action :authenticate_user!
+  before_action :find_answer, only: %i[update destroy]
   before_action :find_question, only: %i[create update destroy]
-
-  def show; end
-
-  def new
-    @answer = Answer.new
-  end
-
-  def edit
-  end
 
   def create
     @answer = @question.answers.new(answer_params)
 
     if @answer.save
-      redirect_to answer_path(@answer)
+      redirect_to question_path(@question)
     else
-      render :new
+      render 'questions/show'
     end
   end
 

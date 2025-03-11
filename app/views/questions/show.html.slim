@@ -1,2 +1,10 @@
 h1 = @question.title
 p = @question.body
+
+- if @question.answers.any?
+  - @question.answers.each do |answer|
+    p = answer.body
+- else
+    p No answers yet.
+
+h2 = render 'answers/form', answer: @answer
