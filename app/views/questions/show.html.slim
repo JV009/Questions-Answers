@@ -6,9 +6,9 @@ p = @question.body
 
 - if @question.answers.present?
   - @question.answers.each do |answer|
-  p = @answer.body
-    - if user_signed_in? && current_user.author?(@answer)
-    = link_to 'Delete answer', question_path(answer), method: :delete, data: { confirm: 'Are you sure?' }
+    p = answer.body
+    - if user_signed_in? && current_user.author?(answer) && answer.persisted?
+      = link_to 'Delete answer', answer_path(answer), method: :delete, data: { confirm: 'Are you sure?' }
 - else
   p No answers yet.
 

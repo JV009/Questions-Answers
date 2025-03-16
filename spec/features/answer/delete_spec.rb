@@ -9,7 +9,7 @@ feature 'User can delete answer', %q{
    given(:author) { create(:user) }
    given(:user) { create(:user) }
    given(:question) { create(:question) }
-   given(:answer) { create(:answer, question: question, user: author) }
+   given!(:answer) { create(:answer, question: question, user: author) }
 
    scenario 'author delete answer' do
      sign_in(author)

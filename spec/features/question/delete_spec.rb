@@ -16,7 +16,6 @@ feature 'User can delete question', %q{
      visit question_path(question)
      click_on 'Delete question'
 
-
      expect(page).to have_content 'Your question successfully deleted.'
      expect(page).to_not have_content question.title
      expect(page).to_not have_content question.body
