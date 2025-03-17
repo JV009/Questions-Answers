@@ -1,0 +1,17 @@
+h1 = @question.title
+p = @question.body
+
+- if user_signed_in? && current_user.author?(@question)
+  = link_to 'Delete question', question_path(@question), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }
+
+- if @question.answers.present?
+  - @question.answers.each do |answer|
+    p = answer.body
+    - if user_signed_in? && current_user.author?(answer) && answer.persisted?
+      = link_to 'Delete answer', answer_path(answer), method: :delete, data: { confirm: 'Are you sure?' }
+- else
+  p No answers yet.
+
+
+
+h2 = render 'answers/form', answer: @answer
