@@ -9,7 +9,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  resources :questions,shallow: true do
-    resources :answers,shallow: true
+  resources :questions, shallow: true do
+    resources :answers, shallow: true, only: %i[create destroy update]
   end
 end

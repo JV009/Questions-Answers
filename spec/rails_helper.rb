@@ -1,5 +1,6 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
+require 'capybara/cuprite'
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 # Prevent database truncation if the environment is production
@@ -37,6 +38,24 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include ControllerHelpers, type: :controller
   config.include FeatureHelpers, type: :feature
+
+  Capybara.register_driver(:cuprite) do |app|
+    Capybara::Cuprite::Driver.new(
+      app,
+      headless: !ENV['HEADLESS'].in?(%w[n 0 no false]),
+      browser_options: {
+        'no-sandbox': nil,
+        'disable-web-security': true,
+        'ignore-certificate-errors': true
+      },
+      js_errors: false,
+      inspector: true,
+      process_timeout: 30
+    )
+  end
+
+  Capybara.javascript_driver = :cuprite
+
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = [
     Rails.root.join('spec/fixtures')

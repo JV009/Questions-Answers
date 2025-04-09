@@ -28,6 +28,10 @@ gem "jbuilder"
 
 gem "devise"
 
+gem "jquery-rails"
+
+gem 'sassc'
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 
@@ -72,4 +76,7 @@ group :test do
   gem 'shoulda-matchers'
   gem 'rails-controller-testing'
   gem 'launchy'
+  gem 'webdrivers'
+  gem 'cuprite'
+  gem 'ferrum'
 end

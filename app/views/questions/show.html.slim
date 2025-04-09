@@ -1,17 +1,10 @@
-h1 = @question.title
-p = @question.body
+= render @question
 
-- if user_signed_in? && current_user.author?(@question)
-  = link_to 'Delete question', question_path(@question), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }
+.answers
+  = render @question.answers if @question.answers.any?
 
-- if @question.answers.present?
-  - @question.answers.each do |answer|
-    p = answer.body
-    - if user_signed_in? && current_user.author?(answer) && answer.persisted?
-      = link_to 'Delete answer', answer_path(answer), method: :delete, data: { confirm: 'Are you sure?' }
-- else
-  p No answers yet.
+.answer-errors
+  - if @answer&.errors&.any?
+    = render 'shared/errors', resource: @answer
 
-
-
-h2 = render 'answers/form', answer: @answer
+= render 'answers/form', answer: @answer || @question.answers.new

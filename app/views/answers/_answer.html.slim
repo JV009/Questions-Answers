@@ -1,0 +1,25 @@
+- if answer.persisted? || answer.errors.any?
+  div id="#{answer.persisted? ? "answer-#{answer.id}" : 'new-answer'}" class="answer"
+    - if answer.errors.any?
+      .answer-errors
+        = render 'shared/errors', resource: answer
+
+    .answer-body= answer.body
+
+    - if user_signed_in? && current_user.author?(answer) && answer.persisted?
+      = link_to 'Edit answer', '#',
+               class: 'edit-answer-link',
+               data: { answer_id: answer.id }
+
+      = link_to 'Delete answer',
+                answer_path(answer),
+                method: :delete,
+                data: { turbo_method: :delete, confirm: 'Are you sure?' }
+
+      = form_with model: answer,
+                 class: 'hidden',
+                 html: { id: "edit-answer-#{answer.id}" },
+                 data: { turbo: false } do |f|
+        = f.label :body, 'Your answer'
+        = f.text_area :body
+        = f.submit 'Save'
