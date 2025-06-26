@@ -1,22 +1,19 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :find_answer, only: %i[update destroy]
-  before_action :find_question, only: %i[create destroy]
+  before_action :find_question, only: %i[create]
 
   def create
     @answer = @question.answers.new(answer_params)
     @answer.user = current_user
 
-    if @answer.save
-      respond_to do |format|
+    respond_to do |format|
+      if @answer.save
+        format.turbo_stream
         format.html { redirect_to @question }
-        format.js
-      end
-    else
-      @answers = @question.answers
-      respond_to do |format|
+      else
         format.html { render 'questions/show', status: :unprocessable_entity }
-        format.js
+        format.turbo_stream { render status: :unprocessable_entity }
       end
     end
   end
@@ -26,15 +23,19 @@ class AnswersController < ApplicationController
     @question = @answer.question
 
     respond_to do |format|
+      format.turbo_stream
       format.html { redirect_to @question }
-      format.js
     end
   end
 
   def destroy
+    @question = @answer.question
     @answer.destroy
 
-    redirect_to question_path(@question),  notice: 'Your answer successfully deleted.'
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream.renove(@answer) }
+      format.html { redirect_to question_path(@question) }
+    end
   end
 
   private

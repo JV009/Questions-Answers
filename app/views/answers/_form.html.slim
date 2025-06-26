@@ -1,10 +1,5 @@
-.answer-errors(style="display: none;")
-  = render 'shared/errors', resource: @answer if @answer&.errors&.any?
+= form_with model: [@question, @answer], class: 'new-answer', local: false do |f|
+  p = f.label :body
+  p = f.text_area :body
 
-= form_with model: [@question, @answer],
-            class: 'new answer',
-            data: { turbo: false },
-            html: { class: 'new-answer-form' } do |f|
-  = f.label :body
-  = f.text_area :body, id: 'answer_body'
-  = f.submit 'Create answer'
+  p = f.submit 'Create answer'

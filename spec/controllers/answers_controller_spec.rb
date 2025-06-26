@@ -10,11 +10,11 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with valid attributes' do
       it 'saves a new answer in the database' do
-        expect { post :create, params: { answer: attributes_for(:answer), question_id: question }, format: :js }.to change(Answer, :count).by(1)
+        expect { post :create, params: { answer: attributes_for(:answer), question_id: question }, format: :turbo_stream }.to change(Answer, :count).by(1)
       end
 
       it 'renders create view' do
-        post :create, params: { answer: attributes_for(:answer), question_id: question, format: :js }
+        post :create, params: { answer: attributes_for(:answer), question_id: question, format: :turbo_stream }
 
         expect(response).to render_template :create
       end
@@ -22,11 +22,11 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with invalid attributes' do
       it 'does not save the answer' do
-        expect { post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }, format: :js }.not_to change(Answer, :count)
+        expect { post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }, format: :turbo_stream }.not_to change(Answer, :count)
       end
 
       it 'renders create temlate' do
-        post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }, format: :js
+        post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }, format: :turbo_stream
 
         expect(response).to render_template :create
       end
@@ -39,14 +39,14 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with valid attributes' do
       it 'changes answers atributes' do
-        patch :update, params: { id: answer, answer: { body: 'updated body' } }, format: :js
+        patch :update, params: { id: answer, answer: { body: 'updated body' } }, format: :turbo_stream
         answer.reload
 
         expect(answer.body).to eq 'updated body'
       end
 
       it 'renders update view' do
-        patch :update, params: { id: answer, answer: { body: 'updated body' } }, format: :js
+        patch :update, params: { id: answer, answer: { body: 'updated body' } }, format: :turbo_stream
 
         expect(response).to render_template :update
       end
@@ -55,12 +55,12 @@ RSpec.describe AnswersController, type: :controller do
     context 'with invalid attributes' do
       it 'does not change answer attributes' do
         expect do
-          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :turbo_stream
         end.to_not change(answer, :body)
       end
 
       it 'renders update view' do
-        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :turbo_stream
 
         expect(response).to render_template :update
       end

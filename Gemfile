@@ -28,8 +28,6 @@ gem "jbuilder"
 
 gem "devise"
 
-gem "jquery-rails"
-
 gem 'sassc'
 
 # Use Redis adapter to run Action Cable in production

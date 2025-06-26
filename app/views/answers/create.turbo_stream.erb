@@ -1,0 +1,3 @@
+# app/views/answers/create.turbo_stream.erb
+<%= turbo_stream.append "answers", @answer %>
+<%= turbo_stream.update "new_answer", partial: "answers/form", locals: { answer: Answer.new } %>

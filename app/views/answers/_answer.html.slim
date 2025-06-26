@@ -1,25 +1,28 @@
-- if answer.persisted? || answer.errors.any?
-  div id="#{answer.persisted? ? "answer-#{answer.id}" : 'new-answer'}" class="answer"
-    - if answer.errors.any?
-      .answer-errors
-        = render 'shared/errors', resource: answer
+- if answer.persisted?
+  div.answer(id="answer-#{answer.id}")
+    p.answer-body = answer.body
 
-    .answer-body= answer.body
+    - if user_signed_in? && current_user.author?(answer)
+      .answer-actions
+        = link_to 'Edit answer', '#',
+                  class: 'edit-answer-link',
+                  data: { answer_id: answer.id }
 
-    - if user_signed_in? && current_user.author?(answer) && answer.persisted?
-      = link_to 'Edit answer', '#',
-               class: 'edit-answer-link',
-               data: { answer_id: answer.id }
-
-      = link_to 'Delete answer',
-                answer_path(answer),
-                method: :delete,
-                data: { turbo_method: :delete, confirm: 'Are you sure?' }
+        = button_to "Delete answer", answer_path(answer),
+                  method: :delete,
+                  remote: true,
+                  class: "delete-answer-link",
+                  form: { data: { turbo: false } },
+                  data: { confirm: "Are you sure?" }
 
       = form_with model: answer,
-                 class: 'hidden',
+                 class: 'hidden edit-answer-form',
                  html: { id: "edit-answer-#{answer.id}" },
-                 data: { turbo: false } do |f|
-        = f.label :body, 'Your answer'
-        = f.text_area :body
-        = f.submit 'Save'
+                 local: false do |f|
+        .field
+          = f.label :body, 'Your answer'
+          = f.text_area :body,
+                       id: "answer_body_#{answer.id}",
+                       class: 'answer-edit-textarea'
+        .actions
+          = f.submit 'Save', class: 'save-answer-btn'

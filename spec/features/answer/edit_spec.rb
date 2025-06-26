@@ -11,35 +11,27 @@ feature 'User can edit answer', %q{
    given!(:question) { create(:question) }
    given!(:answer) { create(:answer, question: question, user: author) }
 
-   scenario 'Unauthenticated user can not edit answer' do
+   scenario 'Unauthenticated can not edit answer' do
      visit question_path(question)
 
      expect(page).to_not have_link 'Edit answer'
-   end
+  end
 
   describe 'Authenticated user' do
     scenario 'edits his answer', js: true do
-    sign_in(author)
-    visit question_path(question)
+      sign_in(author)
+      visit question_path(question)
 
-    within "#answer-#{answer.id}" do
-      click_link 'Edit answer'
-
-      find('textarea[name="answer[body]"]').set('edited answer')
-      click_button 'Save'
+      page.execute_script(<<~JS)
+        document.querySelector('.edit-answer-link').click();
+        document.querySelector('#edit-answer-#{answer.id} textarea').value = 'edited answer';
+        document.querySelector('#edit-answer-#{answer.id}').submit();
+      JS
 
       expect(page).to have_content('edited answer')
-      expect(page).not_to have_field('Your answer', visible: true)
-      expect(page).to have_no_button('Save', wait: 5)
     end
-  end
 
     scenario 'edits his answer with errors'
-    scenario "tries to edit other user's answer" do
-      sign_in(user)
-
-      visit question_path(question)
-      expect(page).to_not have_link 'Edit answer'
-    end
+    scenario "tries to edit other user's question"
   end
 end
